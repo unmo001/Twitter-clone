@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitter_clone | signup</title>
+</head>
+<body>
+<p>ユーザーの新規登録する画面です。</p>
+<form action="{% url 'accounts:signup' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Sign up">
+</form>
+<p>それとも<a href="{% url 'accounts:toppage' %}">最初に戻る</a></p>
+</body>
+</html>
