@@ -51,10 +51,14 @@ class SignUp(CreateView):
         gender = form.cleaned_data.get('gender')
         user = authenticate(gender=gender)
         login(self.request, user)
+        context = {
+            'gender': gender
+        }
+
         if gender == '男':
-            return HttpResponse('male')
+            return HttpResponse('male',context)
         else:
-            return HttpResponse('female')
+            return HttpResponse('female',context)
         # return HttpResponseRedirect(self.get_success_url)
 
 
