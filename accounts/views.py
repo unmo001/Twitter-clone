@@ -1,12 +1,14 @@
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
+from django.template import loader
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
-from accounts.forms import SignUpForm
-from django.http import HttpResponseRedirect, HttpResponse;
+from accounts.forms import SignUpForm, LoginForm
+from django.http import HttpResponseRedirect, HttpResponse, request
 from .models import CustomUser
 
 
@@ -31,35 +33,36 @@ class FemaleView(TemplateView):
     template_name = 'female.html'
 
 
-femaleview = FemaleView.as_view()
-
-
-class MaleView(TemplateView):
-    template_name = 'male.html'
-
-
-maleview = MaleView.as_view()
+def malepage(request):
+    gender_show = CustomUser.gender
+    template = loader.get_template('male.html')
+    return render(request, 'male.html', )
 
 
 class SignUp(CreateView):
     form_class = SignUpForm
     template_name = 'signup.html'
-    get_success_url = reverse_lazy('accounts:index')
+    get_success_url_male = reverse_lazy('accounts:male')
+    get_success_url_female = reverse_lazy('accounts:female')
 
     def form_valid(self, form):
         form.save()
-        gender = form.cleaned_data.get('gender')
-        user = authenticate(gender=gender)
-        login(self.request, user)
-        context = {
-            'gender': gender
-        }
+        login(self.request,CustomUser)
+        self.object = CustomUser
 
-        if gender == '男':
-            return HttpResponse('male',context)
+        if CustomUser.gender == '男':
+            return HttpResponseRedirect(self.get_success_url_male())
         else:
-            return HttpResponse('female',context)
+            return HttpResponseRedirect(self.get_success_url_female())
         # return HttpResponseRedirect(self.get_success_url)
 
 
 Signup = SignUp.as_view()
+
+
+# class Login(LoginView):
+#     form_class = LoginForm
+#     template_name = 'login.html'
+#
+#
+# loginview = Login.as_view()

@@ -9,7 +9,7 @@ class CustomUser(AbstractUser):
         ('男', '男'),
         ('女', '女')
     )
-    gender = models.CharField(max_length=2, choices=gender_select)
+    gender = models.CharField(max_length=50, choices=gender_select)
 
     def __str__(self):
         return str(self.gender)
