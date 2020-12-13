@@ -2,7 +2,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 from django.template import loader
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
@@ -42,22 +42,19 @@ def malepage(request):
 class SignUp(CreateView):
     form_class = SignUpForm
     template_name = 'signup.html'
-    get_success_url_male = reverse_lazy('accounts:male')
-    get_success_url_female = reverse_lazy('accounts:female')
-
-    def form_valid(self, form):
-        form.save()
-        login(self.request,CustomUser)
-        self.object = CustomUser
-
-        if CustomUser.gender == '男':
-            return HttpResponseRedirect(self.get_success_url_male())
+    
+    def get_success_url(self):
+        if self.object.gender == '男':
+            target = 'accounts:male'
         else:
-            return HttpResponseRedirect(self.get_success_url_female())
-        # return HttpResponseRedirect(self.get_success_url)
-
-
-Signup = SignUp.as_view()
+            target = 'accounts:female'
+        return reverse(target)
+    
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request,user)
+        self.object = CustomUser
+        return super(SignUp, self).form_valid(form)
 
 
 # class Login(LoginView):
