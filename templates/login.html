@@ -5,8 +5,12 @@
     <title>Twitter_clone | login</title>
 </head>
 <body>
-<p>練習のために、Twitterのクローン作ってます。
-眠ーい</p>
-<p>工事中です。</p>
+<form action="{% url 'accounts:login' %}" method="post">
+    {% csrf_token %}
+    {{ form.username }}
+    {{ form.password }}
+    {{ form.gender }}
+    <input type="submit" value="login">
+</form>
 </body>
 </html>

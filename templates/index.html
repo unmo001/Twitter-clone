@@ -6,7 +6,9 @@
 </head>
 <body>
 <p>ここにいろいろ表示させます。</p>
-<p></p>
+<p>{{ CustomUser.username }}さんこんにちは
+</p>
+{{ CustomUser.gender }}
 <a href="{% url 'accounts:toppage' %}">ログアウト</a>
 
 </body>
