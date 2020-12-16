@@ -1,4 +1,5 @@
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
@@ -39,7 +40,8 @@ class MaleView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(MaleView, self).get_context_data()
-        context = CustomUser.objects.all()
+        context['user'] = self.request.user
+        
         return context
 
 
