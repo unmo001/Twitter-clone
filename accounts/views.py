@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse_lazy, reverse
-from django.views import View
+from django.views import View, generic
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView
 
@@ -34,14 +34,14 @@ class FemaleView(TemplateView):
     template_name = 'female.html'
 
 
-class MaleView(ListView):
+class MaleView(generic.TemplateView):
     template_name = 'male.html'
     model = CustomUser
 
     def get_context_data(self, **kwargs):
         context = super(MaleView, self).get_context_data()
         context['user'] = self.request.user
-        
+
         return context
 
 
@@ -52,6 +52,10 @@ class SignUp(CreateView):
     form_class = SignUpForm
     template_name = 'signup.html'
 
+    def __init__(self, **kwargs):
+        super().__init__()
+        self.object = CustomUser
+
     def get_success_url(self):
         if self.object.gender == '男':
             target = 'accounts:male'
@@ -61,8 +65,9 @@ class SignUp(CreateView):
 
     def form_valid(self, form):
         user = form.save()
+        print("User:{}".format(user))
         login(self.request, user)
-        self.object = CustomUser
+        print("Logged in as: {}".format(self.request.user))
         return super(SignUp, self).form_valid(form)
 
 
