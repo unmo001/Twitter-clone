@@ -12,5 +12,7 @@ urlpatterns = [
     path('accounts/signup/', SignUp.as_view(), name='signup'),
     path('accounts/login',views.Login.as_view(), name='login'),
     path('female/', views.FemaleView.as_view(), name='female'),
-    path('male/', views.MaleView.as_view(), name='male')
+    path('male', views.MaleView.as_view(), name='male'),
+    path('templateview/',views.Template_View.as_view(),name='template_view'),
+    # path('listview/',views.List_View.as_view(),name="list_view")
 ]

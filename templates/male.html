@@ -5,8 +5,15 @@
     <title>ログイン時に男と選択した人が表示されるページです。</title>
 </head>
 <body>
-<p>あなたの性別は{{ user.gender }}ですね。</p>
 <p>{{ user.username }}さんこんにちは</p>
-{{ user }}
+<p>あなたの性別は{{ user.gender }}ですね。</p>
+<h1>ユーザー投稿一覧</h1>
+<p>{{ user.username }}さんが{{ user.created_date }}に</p>
+<p>{{ user.text }}を投稿しました</p>
+<form method="post" action='/male'>
+{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">投稿する</button>
+</form>
 </body>
 </html>
