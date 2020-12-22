@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from django.urls import reverse_lazy
 
-from .models import CustomUser, Test_model
+from .models import CustomUser, PostModel
 
 
 class SignUpForm(UserCreationForm):
@@ -20,16 +20,10 @@ class LoginForm(AuthenticationForm):
         self.fields['password'].widget.attrs['class'] = 'form-control'
 
 
-class Test_Model_Form(forms.ModelForm):
-    class Meta:
-        model = Test_model
-        fields = ('name',)
-
-
-class Post_Form(forms.ModelForm):
+class PostForm(forms.ModelForm):
     success_url = reverse_lazy('accounts:male')
     template_name = 'accounts:male'
 
     class Meta:
-        model = CustomUser
+        model = PostModel
         fields = ('text',)

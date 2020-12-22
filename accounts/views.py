@@ -10,9 +10,8 @@ from django.views import View, generic
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import CreateView, ModelFormMixin
 
-from accounts.forms import SignUpForm, LoginForm, Post_Form
-from .models import CustomUser
-from .forms import Test_Model_Form
+from accounts.forms import SignUpForm, LoginForm, PostForm
+from .models import CustomUser, PostModel
 
 
 # Create your views here.
@@ -43,33 +42,24 @@ class FemaleView(TemplateView):
         return context
 
 
-class MaleView(ListView, ModelFormMixin):
+class PostCreate(CreateView):
+    template_name = 'male.html'
+    model = PostModel
+    form_class = PostForm
+
+    def get_success_url(self):
+        return reverse('accounts:male')
+
+
+class MaleView(ListView):
     template_name = 'male.html'
     model = CustomUser
     paginate_by = 5
-    success_url = reverse_lazy("accounts:male")
-    form_class = Post_Form
-    
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.object = None
-        self.object_list = self.get_queryset()
 
-    def get(self, request, *args, **kwargs):
-        self.object = None
-        return super(MaleView, self).get(request,*args,**kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(MaleView, self).get_context_data()
-        context['user'] = self.request.user
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(MaleView, self).get_context_data(**kwargs)
+        context['form'] = PostForm()
         return context
-
-    def post(self, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
 
 
 maleview = MaleView.as_view()
@@ -114,7 +104,6 @@ class Template_View(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Template_View, self).get_context_data(**kwargs)
         context['変数キー'] = '表示されるやつ'
-        form = Test_Model_Form(self.request)
         return context
 
 
